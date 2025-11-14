@@ -577,29 +577,28 @@
 
 
 
-
 import platform
 import re
 import time
 import pandas as pd
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
-# -------------------------------
+
+# ---------------------------------------
 # CLEAN PRICE
-# -------------------------------
+# ---------------------------------------
 def clean_price(price_text):
     price = re.sub(r"[^\d]", "", price_text)
     return int(price) if price.isdigit() else None
 
 
-# -------------------------------
+# ---------------------------------------
 # SAFE WAIT
-# -------------------------------
+# ---------------------------------------
 def safe_wait(driver):
     try:
         driver.find_element(By.TAG_NAME, "body")
@@ -608,9 +607,9 @@ def safe_wait(driver):
         return False
 
 
-# -------------------------------
+# ---------------------------------------
 # AMAZON SCRAPER
-# -------------------------------
+# ---------------------------------------
 def scrape_amazon(driver, query):
     if not safe_wait(driver):
         return []
@@ -630,7 +629,7 @@ def scrape_amazon(driver, query):
     data = []
     products = driver.find_elements(By.CSS_SELECTOR, "div[data-component-type='s-search-result']")
 
-    for product in products[:20]:
+    for product in products[:8]:     # REDUCED for Render Free
         try:
             title = product.find_element(By.TAG_NAME, "h2").text
             link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
@@ -661,15 +660,15 @@ def scrape_amazon(driver, query):
     return data
 
 
-# -------------------------------
+# ---------------------------------------
 # MYNTRA SCRAPER
-# -------------------------------
+# ---------------------------------------
 def scrape_myntra(driver, query):
     if not safe_wait(driver):
         return []
 
     driver.get("https://www.myntra.com/")
-    time.sleep(2)
+    time.sleep(3)
 
     try:
         search_box = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
@@ -686,7 +685,7 @@ def scrape_myntra(driver, query):
     data = []
     products = driver.find_elements(By.CSS_SELECTOR, "li.product-base")
 
-    for product in products[:20]:
+    for product in products[:8]:     # REDUCED for Render Free
         try:
             brand = product.find_element(By.CSS_SELECTOR, "h3.product-brand").text
             name = product.find_element(By.CSS_SELECTOR, "h4.product-product").text
@@ -718,9 +717,9 @@ def scrape_myntra(driver, query):
     return data
 
 
-# -------------------------------
-# DRIVER SETUP FOR BOTH WINDOWS + RENDER
-# -------------------------------
+# ---------------------------------------
+# DRIVER SETUP (WINDOWS + RENDER)
+# ---------------------------------------
 def get_driver():
     os_name = platform.system()
 
@@ -728,35 +727,41 @@ def get_driver():
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--disable-infobars")
     options.add_argument("--disable-gpu")
+    options.add_argument("--disable-infobars")
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
-    # USER AGENT
+    # MASSIVE MEMORY SAVERS for Render Free
+    options.add_argument("--single-process")
+    options.add_argument("--no-zygote")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--remote-debugging-port=9222")
+
+    # User-Agent
     options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
         " AppleWebKit/537.36 (KHTML, like Gecko)"
         " Chrome/118.0.5993.70 Safari/537.36"
     )
 
-    # ----------------------
-    # WINDOWS (LOCAL)
-    # ----------------------
+    # ---------------------------
+    # WINDOWS (LOCAL DEVELOPMENT)
+    # ---------------------------
     if os_name == "Windows":
         from webdriver_manager.chrome import ChromeDriverManager
-        print("▶ Running on Windows (local dev)")
+        print("▶ Running on Windows (LOCAL)")
 
         return webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=options
         )
 
-    # ----------------------
+    # ---------------------------
     # LINUX (RENDER / DOCKER)
-    # ----------------------
+    # ---------------------------
     print("▶ Running on Linux (Render)")
+
     options.binary_location = "/usr/bin/chromium"
 
     return webdriver.Chrome(
@@ -764,14 +769,10 @@ def get_driver():
         options=options
     )
 
-    # ----------------------
-    # LINUX (Render)
-    # ----------------------
-    print("▶ Running on Render (LINUX)")
 
-# -------------------------------
+# ---------------------------------------
 # MAIN SCRAPER
-# -------------------------------
+# ---------------------------------------
 def scrape_products(product_name):
     driver = get_driver()
     print("⏳ Scraping started...")
@@ -784,6 +785,7 @@ def scrape_products(product_name):
         print("❌ ERROR:", e)
         driver.quit()
         return []
+
     finally:
         try:
             driver.quit()
@@ -801,9 +803,9 @@ def scrape_products(product_name):
     return all_data
 
 
-# -------------------------------
+# ---------------------------------------
 # RUN MANUALLY
-# -------------------------------
+# ---------------------------------------
 if __name__ == "__main__":
     product = input("Enter product to search: ")
     scrape_products(product)
