@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TrendHive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f6f6f6;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* ✅ Navbar exact copy from home.css */
+        nav {
+          background: #fff;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 18px 60px;
+          border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+          font-size: 2rem;
+          font-weight: 700;
+          color: #ff6a00;
+        }
+
+        .nav-links a {
+          text-decoration: none;
+          color: #444;
+          margin: 0 18px;
+          font-size: 16px;
+          transition: 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links .active {
+          color: #ff6a00;
+          font-weight: 600;
+        }
+
+        /* ✅ Page padding */
+        .page-content {
+            padding: 30px 60px;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- ✅ Navbar placed ONLY here -->
+<nav>
+    <div class="logo">TrendHive</div>
+    <div class="nav-links">
+        <a href="{{ url_for('home') }}" class="{% if request.path == '/home' %}active{% endif %}">HOME</a>
+        <a href="{{ url_for('dashboard') }}" class="{% if request.path == '/dashboard' %}active{% endif %}">DASHBOARD</a>
+        <a href="{{ url_for('about') }}" class="{% if request.path == '/about' %}active{% endif %}">ABOUT</a>
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+</nav>
+
+<!-- ✅ your page content starts here -->
+<div class="page-content">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
+

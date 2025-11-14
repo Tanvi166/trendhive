@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About | TrendHive</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    body {
+      background: #f6f6f6;
+      color: #333;
+    }
+
+    /* NAVBAR */
+    nav {
+      background: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 60px;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ff6a00;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #444;
+      margin: 0 18px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover,
+    .nav-links .active {
+      color: #ff6a00;
+      font-weight: 600;
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color:#2bbf0a;
+    }
+
+    .hero p {
+      color: #666;
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    /* DESCRIPTION BOX */
+    .description {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px 40px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    .description b {
+      color: #f94f06;
+    }
+
+    /* MISSION SECTION */
+    .extra-section {
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .extra-section h2 {
+      font-size: 2rem;
+      color: #4ca3ea;
+      font-weight: 700;
+    }
+
+    .mission-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .mission-card {
+      width: 280px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      text-align: center;
+      color: #555;
+      transition: 0.3s;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .mission-card h3 {
+      color: #ff6f00;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    /* HOW IT WORKS */
+    .steps-section {
+      margin-top: 60px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .steps-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .steps-box {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .step {
+      width: 260px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: 0.3s;
+      text-align: center;
+    }
+
+    .step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .step img {
+      width: 70px;
+      margin-bottom: 12px;
+    }
+
+    .step h3 {
+      color: #ff6a00;
+    }
+
+    /* TEAM SECTION */
+    .team-section {
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .team-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .team-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .member {
+      background: #fff;
+      padding: 20px;
+      width: 240px;
+      border-radius: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+
+    .member:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .member img {
+      width: 180px;
+      height: 180px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 2px solid #ff6a00;
+    }
+
+    .member h3 {
+      margin-top: 15px;
+      color: #444;
+      font-size: 1.2rem;
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      background: #ececec;
+      color: #666;
+      border-top: 1px solid #ddd;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="logo">TrendHive</div>
+    <div class="nav-links">
+      <a href="{{ url_for('home') }}">HOME</a>
+      <a href="{{ url_for('dashboard') }}">DASHBOARD</a>
+      <a href="{{ url_for('about') }}" class="active">ABOUT</a>
+      <a href="{{ url_for('logout') }}">LOGOUT</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>About TrendHive</h1>
+    <p>Your smart assistant for product comparison & price insights.</p>
+  </section>
+
+  <!-- DESCRIPTION -->
+  <div class="description">
+    <p>
+      <b>TrendHive</b> is a user-focused online platform designed to help shoppers get
+      the best deals instantly.
+      <br><br>
+      We focus on making price comparison effortless, quick, and accurate —
+      allowing users to check product pricing across multiple shopping platforms
+      in seconds.
+    </p>
+  </div>
+
+  <!-- MISSION SECTION -->
+  <section class="extra-section">
+    <h2>Our Mission</h2>
+
+    <div class="mission-boxes">
+      <div class="mission-card">
+        <h3>Smart Decisions</h3>
+        <p>We help users save time & money by giving clear price comparisons.</p>
+      </div>
+
+      <div class="mission-card">
+        <h3>Fast Results</h3>
+        <p>Our platform provides instant search results for a smooth experience.</p>
+      </div>
+
+      <div class="mission-card">
+        <h3>Customer-Focused</h3>
+        <p>We aim to solve real problems shoppers face every day.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="steps-section">
+    <h2>How TrendHive Works</h2>
+
+    <div class="steps-box">
+
+      <div class="step">
+        <img src="https://cdn-icons-png.flaticon.com/512/1157/1157109.png">
+        <h3>Step 1</h3>
+        <p>Type the product name you want to check.</p>
+      </div>
+
+      <div class="step">
+        <img src="https://cdn-icons-png.flaticon.com/512/3593/3593509.png">
+        <h3>Step 2</h3>
+        <p>We scan top websites instantly.</p>
+      </div>
+
+      <div class="step">
+        <img src="https://cdn-icons-png.flaticon.com/512/2983/2983788.png">
+        <h3>Step 3</h3>
+        <p>You get real-time comparison results.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="team-section">
+    <h2>Meet Our Team</h2>
+
+    <div class="team-container">
+      <div class="member">
+        <img src="{{ url_for('static', filename='images/tanvi.png') }}" alt="Tanvi">
+        <h3>Tanvi</h3>
+      </div>
+      <div class="member">
+        <img src="{{ url_for('static', filename='images/sanchi.png') }}" alt="Sanchi">
+        <h3>Sanchi</h3>
+      </div>
+      <div class="member">
+        <img src="{{ url_for('static', filename='images/yashsavi.png') }}" alt="Yashsavi">
+        <h3>Yashasvi</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="

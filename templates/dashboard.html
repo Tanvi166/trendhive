@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<style>
+
+.main-content {
+    width: 100%;
+}
+
+/* TITLE */
+.section-title {
+    font-size: 42px;
+    font-weight: 700;
+    text-align: center;
+    color: #2bbf0a;
+    margin-bottom: 5px;
+}
+
+.light-sub {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* METRIC BOXES */
+.metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-bottom: 40px;
+}
+
+.metric-box {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    font-size: 17px;
+}
+
+.metric-value {
+    margin-top: 5px;
+    font-size: 26px;
+    font-weight: 800;
+    color: #3114b7;
+}
+
+/* CHART BOX */
+.chart-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 35px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e5e5e5;
+}
+
+.chart-box h4 {
+    margin: 0 0 10px;
+    font-size: 20px;
+    text-align: center;
+    color: #333;
+}
+
+/* PRODUCT SECTIONS */
+.products-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* Headings */
+.product-section-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ff6a00;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+/* Product Cards */
+.product-card {
+    width: 100%;
+    background: #ffffff;
+    padding: 14px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    border: 1px solid #e5e5e5;
+    transition: 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    background: #f8f8f8;
+}
+
+.product-card img {
+    width: 85px;
+    height: 85px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.product-card strong {
+    font-size: 17px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.product-card div {
+    line-height: 1.35;
+    font-size: 14px;
+}
+
+.product-card a {
+    text-decoration: underline;
+    color: #ff6a00;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+</style>
+
+<!-- MAIN DASHBOARD PAGE -->
+<div class="main-content">
+
+    <h2 class="section-title">Multi Product Trend Dashboard</h2>
+    <p class="light-sub">Analyze product prices and compare across platforms</p>
+
+    <!-- METRICS -->
+    <div class="metric-row">
+        <div class="metric-box">
+            Total Products
+            <div class="metric-value">{{ total_products }}</div>
+        </div>
+        <div class="metric-box">
+            Average Price
+            <div class="metric-value">₹{{ avg_price }}</div>
+        </div>
+        <div class="metric-box">
+            Min Price
+            <div class="metric-value">₹{{ min_price }}</div>
+        </div>
+        <div class="metric-box">
+            Max Price
+            <div class="metric-value">₹{{ max_price }}</div>
+        </div>
+    </div>
+
+    <!-- CHART 1 -->
+    <div class="chart-box">
+        <h4>Average Price by Website</h4>
+        {{ graph_html|safe }}
+    </div>
+
+    <!-- CHART 2 -->
+    <div class="chart-box">
+        <h4>Price Distribution (Histogram)</h4>
+        {{ histogram_html|safe }}
+    </div>
+
+    <!-- CHART 3 -->
+    <div class="chart-box">
+        <h4>Website Product Share</h4>
+        {{ pie_html|safe }}
+    </div>
+
+    <!-- CHART 4 -->
+    {% if trend_html %}
+    <div class="chart-box">
+        <h4>Price Trend Over Time</h4>
+        {{ trend_html|safe }}
+    </div>
+    {% endif %}
+
+    <!-- PRODUCT LISTS -->
+    <div class="products-wrapper">
+
+        <div>
+            <h4 class="product-section-title">Top 10 Cheapest Products</h4>
+
+            {% for p in cheap %}
+            <div class="product-card">
+                <img src="{{ p.Image }}">
+                <div>
+                    <strong>🛒 {{ p.Title }}</strong>
+                    Website: {{ p.Website }}<br>
+                    Price: ₹{{ p.Price }}<br>
+                    <a href="{{ p.Link }}" target="_blank">View</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h4 class="product-section-title">Top 10 Most Expensive Products</h4>
+
+            {% for p in expensive %}
+            <div class="product-card">
+                <img src="{{ p.Image }}">
+                <div>
+                    <strong>💼 {{ p.Title }}</strong>
+                    Website: {{ p.Website }}<br>
+                    Price: ₹{{ p.Price }}<br>
+                    <a href="{{ p.Link }}" target="_blank">View</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

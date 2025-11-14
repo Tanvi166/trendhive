@@ -1,0 +1,150 @@
+.about-body {
+  background: radial-gradient(circle at top, #0a0a0f, #1a1a2e 60%);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  min-height: 100vh;
+}
+
+
+
+.about-section {
+  padding: 80px 20px;
+}
+
+.about-section h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px #0ff;
+}
+
+.about-text {
+  max-width: 700px;
+  margin: 0 auto 50px;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+.team-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.team-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 20px;
+  width: 230px;
+  box-shadow: 0 0 10px #0ff3, inset 0 0 10px #0ff1;
+  transition: 0.3s;
+}
+
+.team-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #0ff9;
+}
+
+.team-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.team-card h3 {
+  color: #00ffff;
+  margin-bottom: 5px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar .logo {
+  color: #00ffff;
+  font-weight: bold;
+  font-size: 1.6rem;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.navbar ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  color: #00ffff;
+}
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 50px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.logo {
+  color: #00eaff;
+  font-weight: 700;
+  font-size: 1.8rem;
+  text-shadow: 0 0 15px #00eaff, 0 0 25px #00eaff;
+}
+
+
+
+.nav-links a {
+  text-decoration: none;
+  color: #fff;
+  margin: 0 18px;
+  font-weight: 500;
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-links a:hover {
+  color: #00eaff;
+  text-shadow: 0 0 10px #00eaff;
+}
+
+.nav-links .active {
+  color: #00eaff;
+  text-shadow: 0 0 10px #00eaff;
+}
+
+body {
+  
+  background: linear-gradient(135deg, #0a0a0a, #121212, #1a1a1a);
+  font-family: "Poppins", sans-serif;
+  color: white;
+  margin: 0;
+}
+

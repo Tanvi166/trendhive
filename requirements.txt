@@ -1,0 +1,7 @@
+Flask
+gunicorn
+selenium
+webdriver-manager
+mysql-connector-python
+pandas
+plotly

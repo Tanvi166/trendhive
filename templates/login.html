@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | TrendHive</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+        body {
+            background: #f6f6f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Login Box */
+        .login-card {
+            width: 380px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 40px 35px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.12);
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #ff6a00;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            background: #f9f9f9;
+        }
+
+        .input-box:focus {
+            border-color: #ff6a00;
+            box-shadow: 0 0 6px rgba(255, 106, 0, 0.2);
+            background: #fff;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #ff6a00;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #e85c00;
+        }
+
+        .signup-link {
+            margin-top: 18px;
+            font-size: 0.95rem;
+        }
+
+        .signup-link a {
+            color: #ff6a00;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN CARD -->
+    <div class="login-card">
+        <div class="logo">TrendHive</div>
+        <div class="tagline">Shop Smart · Compare Prices · Save More</div>
+
+        {% if error %}
+        <div style="color: red; margin-bottom:10px; font-weight:600;">{{ error }}</div>
+        {% endif %}
+
+        <form action="/login" method="POST">
+            <input type="email" name="email" class="input-box" placeholder="Enter your email" required>
+            <input type="password" name="password" class="input-box" placeholder="Enter your password" required>
+            <button class="login-btn">Login</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="/signup">Sign Up</a>
+        </div>
+    </div>
+
+</body>
+</html>
