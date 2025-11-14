@@ -743,7 +743,8 @@ def scrape_products(product_name):
     options.add_argument("--window-size=1920,1080")
 
     # Chrome binary inside Docker/Render
-    options.binary_location = "/usr/bin/google-chrome"
+    options.binary_location = "/usr/bin/chromium"
+
 
     # User-Agent
     options.add_argument(
