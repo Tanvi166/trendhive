@@ -738,13 +738,23 @@ def scrape_products(product_name):
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-infobars")
     options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--disable-software-rasterizer")      # required
+    options.add_argument("--remote-debugging-port=9222")       # required
     options.add_argument("--window-size=1920,1080")
+
+    # Chrome binary inside Docker/Render
     options.binary_location = "/usr/bin/google-chrome"
+
+    # User-Agent
     options.add_argument(
         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.70 Safari/537.36"
     )
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # USE DOCKER CHROMEDRIVER – NOT webdriver_manager
+    driver = webdriver.Chrome(
+        service=Service("/usr/local/bin/chromedriver"),
+        options=options
+    )
 
     print("⏳ Scraping started...")
 
