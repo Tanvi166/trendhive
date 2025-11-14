@@ -141,7 +141,6 @@ def scrape_myntra(driver, query):
 
 # -------------------------------
 # DRIVER SETUP (Windows + Render)
-# -------------------------------
 def get_driver():
     os_name = platform.system()
 
@@ -149,10 +148,12 @@ def get_driver():
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--disable-infobars")
     options.add_argument("--disable-gpu")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--remote-debugging-port=9222")
     options.add_argument("--window-size=1920,1080")
+    options.add_argument("--disable-blink-features=AutomationControlled")
 
     # User agent
     options.add_argument(
@@ -162,27 +163,27 @@ def get_driver():
     )
 
     # ----------------------
-    # WINDOWS (LOCAL)
+    # WINDOWS LOCAL
     # ----------------------
     if os_name == "Windows":
         from webdriver_manager.chrome import ChromeDriverManager
-        print("▶ Running on Windows (local)")
+        print("▶ Running on Windows (LOCAL)")
         return webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=options
         )
 
     # ----------------------
-    # LINUX (RENDER)
+    # LINUX (Render)
     # ----------------------
-    print("▶ Running on Render (Linux)")
+    print("▶ Running on Render (LINUX)")
+
     options.binary_location = "/usr/bin/chromium"
 
     return webdriver.Chrome(
         service=Service("/usr/bin/chromedriver"),
         options=options
     )
-
 
 # -------------------------------
 # MAIN SCRAPER
