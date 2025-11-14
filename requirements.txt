@@ -1,7 +1,9 @@
-Flask
-gunicorn
+flask
+mysql-connector-python
 selenium
 webdriver-manager
-mysql-connector-python
 pandas
 plotly
+gunicorn
+gevent
+python-dotenv
