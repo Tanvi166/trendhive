@@ -96,65 +96,100 @@
 
 
 
-# -----------------------------
-# 1) Use lightweight Python base
-# -----------------------------
+# # -----------------------------
+# # 1) Use lightweight Python base
+# # -----------------------------
+# FROM python:3.10-slim
+
+# # -----------------------------
+# # 2) Install system dependencies
+# # -----------------------------
+# RUN apt-get update && apt-get install -y \
+#     wget \
+#     curl \
+#     gnupg \
+#     firefox-esr \
+#     libgtk-3-0 \
+#     libdbus-glib-1-2 \
+#     libxt6 \
+#     libxcomposite1 \
+#     libxdamage1 \
+#     libxfixes3 \
+#     libasound2 \
+#     libxrandr2 \
+#     libxss1 \
+#     libnss3 \
+#     libglib2.0-0 \
+#     libx11-xcb1 \
+#     && rm -rf /var/lib/apt/lists/*
+
+# # -----------------------------
+# # 3) Install Geckodriver
+# # -----------------------------
+# RUN GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest \
+#     | grep "tag_name" | cut -d '"' -f 4) \
+#     && wget https://github.com/mozilla/geckodriver/releases/download/$GECKO_VERSION/geckodriver-$GECKO_VERSION-linux64.tar.gz \
+#     && tar -xvzf geckodriver-$GECKO_VERSION-linux64.tar.gz \
+#     && mv geckodriver /usr/local/bin/ \
+#     && rm geckodriver-$GECKO_VERSION-linux64.tar.gz \
+#     && chmod +x /usr/local/bin/geckodriver
+
+# # -----------------------------
+# # 4) Set working directory
+# # -----------------------------
+# WORKDIR /app
+
+# # -----------------------------
+# # 5) Copy project files
+# # -----------------------------
+# COPY . .
+
+# # -----------------------------
+# # 6) Install Python dependencies
+# # -----------------------------
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # -----------------------------
+# # 7) Expose port
+# # -----------------------------
+# EXPOSE 10000
+
+# # -----------------------------
+# # 8) Run the app
+# # -----------------------------
+# CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
+
+
+
+
+
+
+
+
+
+
 FROM python:3.10-slim
 
-# -----------------------------
-# 2) Install system dependencies
-# -----------------------------
+# Install dependencies + chromium + chromedriver
 RUN apt-get update && apt-get install -y \
     wget \
+    unzip \
     curl \
-    gnupg \
-    firefox-esr \
-    libgtk-3-0 \
-    libdbus-glib-1-2 \
-    libxt6 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libasound2 \
-    libxrandr2 \
-    libxss1 \
-    libnss3 \
-    libglib2.0-0 \
-    libx11-xcb1 \
-    && rm -rf /var/lib/apt/lists/*
+    chromium \
+    chromium-driver \
+    && apt-get clean
 
-# -----------------------------
-# 3) Install Geckodriver
-# -----------------------------
-RUN GECKO_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest \
-    | grep "tag_name" | cut -d '"' -f 4) \
-    && wget https://github.com/mozilla/geckodriver/releases/download/$GECKO_VERSION/geckodriver-$GECKO_VERSION-linux64.tar.gz \
-    && tar -xvzf geckodriver-$GECKO_VERSION-linux64.tar.gz \
-    && mv geckodriver /usr/local/bin/ \
-    && rm geckodriver-$GECKO_VERSION-linux64.tar.gz \
-    && chmod +x /usr/local/bin/geckodriver
+ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 
-# -----------------------------
-# 4) Set working directory
-# -----------------------------
 WORKDIR /app
 
-# -----------------------------
-# 5) Copy project files
-# -----------------------------
-COPY . .
-
-# -----------------------------
-# 6) Install Python dependencies
-# -----------------------------
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# -----------------------------
-# 7) Expose port
-# -----------------------------
+COPY . .
+
 EXPOSE 10000
 
-# -----------------------------
-# 8) Run the app
-# -----------------------------
-CMD ["gunicorn", "--bind", "0.0.0.0:10000", "app:app"]
+# optimized for free plan (1 worker, gevent, 200s timeout)
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:10000", "--workers=1", "--worker-class=gevent", "--timeout=200"]
