@@ -793,72 +793,493 @@
 
 
 
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.chrome.service import Service
+# from selenium.webdriver.chrome.options import Options
+# from webdriver_manager.chrome import ChromeDriverManager
+# import time
+# import pandas as pd
+# import re
+
+
+# # 🔹 Clean prices
+# def clean_price(price_text):
+#     price = re.sub(r'[^\d]', '', price_text)
+#     return int(price) if price.isdigit() else None
+
+
+# # 🔹 Basic wait validation
+# def safe_wait(driver):
+#     try:
+#         driver.find_element(By.TAG_NAME, "body")
+#         return True
+#     except:
+#         return False
+
+
+# # ----------------------------------------
+# # ✅ AMAZON SCRAPER (works in headless)
+# # ----------------------------------------
+# def scrape_amazon(driver, query):
+#     if not safe_wait(driver):
+#         return []
+
+#     driver.get("https://www.amazon.in/")
+#     time.sleep(3)
+
+#     try:
+#         search_box = driver.find_element(By.ID, "twotabsearchtextbox")
+#     except:
+#         return []
+
+#     search_box.send_keys(query)
+#     search_box.send_keys(Keys.RETURN)
+#     time.sleep(3)
+
+#     data = []
+#     products = driver.find_elements(By.CSS_SELECTOR, "div[data-component-type='s-search-result']")
+
+#     for product in products[:20]:
+#         try:
+#             title = product.find_element(By.TAG_NAME, "h2").text
+#             link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
+
+#             try:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.a-price-whole").text
+#             except:
+#                 price_text = "N/A"
+
+#             # image
+#             try:
+#                 image = product.find_element(By.CSS_SELECTOR, "img.s-image").get_attribute("src")
+#             except:
+#                 image = ""
+
+#             if link and not link.startswith("http"):
+#                 link = "https://www.amazon.in" + link
+
+#             price = clean_price(price_text)
+
+#             data.append({
+#                 "Website": "Amazon",
+#                 "Title": title,
+#                 "Price": price,
+#                 "Link": link,
+#                 "Image": image
+#             })
+#         except:
+#             continue
+
+#     return data
+
+
+# # ----------------------------------------
+# # ✅ MYNTRA SCRAPER (FULL HEADLESS FIX)
+# # ----------------------------------------
+# def scrape_myntra(driver, query):
+#     if not safe_wait(driver):
+#         return []
+
+#     driver.get("https://www.myntra.com/")
+#     time.sleep(3)
+
+#     try:
+#         search_box = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
+#     except:
+#         return []
+
+#     search_box.send_keys(query)
+#     search_box.send_keys(Keys.RETURN)
+#     time.sleep(5)
+
+#     # 🔹 SCROLL so Myntra loads all products
+#     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#     time.sleep(3)
+
+#     data = []
+#     products = driver.find_elements(By.CSS_SELECTOR, "li.product-base")
+
+#     for product in products[:20]:
+#         try:
+#             brand = product.find_element(By.CSS_SELECTOR, "h3.product-brand").text
+#             name = product.find_element(By.CSS_SELECTOR, "h4.product-product").text
+
+#             # price
+#             try:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.product-discountedPrice").text
+#             except:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.product-price").text
+
+#             # link
+#             link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
+#             if link and not link.startswith("http"):
+#                 link = "https://www.myntra.com" + link
+
+#             # image
+#             try:
+#                 image = product.find_element(By.CSS_SELECTOR, "img.img-responsive").get_attribute("src")
+#             except:
+#                 image = ""
+
+#             price = clean_price(price_text)
+
+#             data.append({
+#                 "Website": "Myntra",
+#                 "Title": f"{brand} {name}",
+#                 "Price": price,
+#                 "Link": link,
+#                 "Image": image
+#             })
+#         except:
+#             continue
+
+#     return data
+
+
+# # ----------------------------------------
+# # ⭐ MAIN SCRAPER (HEADLESS ENABLED)
+# # ----------------------------------------
+# def scrape_products(product_name):
+
+#     # FULL HEADLESS CONFIG FOR DEPLOYMENT
+#     options = Options()
+#     options.add_argument("--headless=new")
+#     options.add_argument("--no-sandbox")
+#     options.add_argument("--disable-dev-shm-usage")
+#     options.add_argument("--disable-gpu")
+#     options.add_argument("--disable-infobars")
+#     options.add_argument("--disable-blink-features=AutomationControlled")
+#     options.add_argument("--window-size=1920,1080")
+#     options.add_argument(
+#         "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.70 Safari/537.36"
+#     )
+
+#     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+#     print("⏳ Scraping started...")
+
+#     try:
+#         amazon_data = scrape_amazon(driver, product_name)
+#         print(f"✅ Amazon scraped: {len(amazon_data)}")
+
+#         myntra_data = scrape_myntra(driver, product_name)
+#         print(f"✅ Myntra scraped: {len(myntra_data)}")
+
+#     except Exception as e:
+#         print("❌ Error during scraping:", e)
+#         driver.quit()
+#         return []
+
+#     finally:
+#         try:
+#             driver.quit()
+#         except:
+#             pass
+
+#     all_data = amazon_data + myntra_data
+
+#     df = pd.DataFrame(all_data)
+#     df.to_csv("product_with_prices.csv", index=False, encoding="utf-8-sig")
+
+#     print("✅ Done scraping all sites")
+#     print(f"💾 Saved {len(all_data)} products")
+
+#     return all_data
+
+
+# # Run manually
+# if __name__ == "__main__":
+#     product = input("Enter product to search: ")
+#     scrape_products(product)
+
+
+
+
+#redo if end above is working
+
+
+
+
+
+
+
+
+
+
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.firefox.options import Options
+# from selenium.webdriver.firefox.service import Service as FirefoxService
+# import time
+# import pandas as pd
+# import re
+
+
+# # ----------------------------------------
+# # CLEAN PRICE
+# # ----------------------------------------
+# def clean_price(price_text):
+#     price = re.sub(r"[^\d]", "", price_text)
+#     return int(price) if price.isdigit() else None
+
+
+# # ----------------------------------------
+# # BASIC WAIT CHECK
+# # ----------------------------------------
+# def safe_wait(driver):
+#     try:
+#         driver.find_element(By.TAG_NAME, "body")
+#         return True
+#     except:
+#         return False
+
+
+# # ----------------------------------------
+# # FIREFOX DRIVER (RENDER FRIENDLY)
+# # ----------------------------------------
+# def create_driver():
+#     options = Options()
+#     options.add_argument("--headless")
+#     options.add_argument("--disable-gpu")
+#     options.add_argument("--no-sandbox")
+#     options.add_argument("--disable-dev-shm-usage")
+#     options.add_argument("--width=1920")
+#     options.add_argument("--height=1080")
+
+#     # Geckodriver installed in Docker at /usr/local/bin/geckodriver
+#     service = FirefoxService("/usr/local/bin/geckodriver")
+
+#     return webdriver.Firefox(service=service, options=options)
+
+
+# # ----------------------------------------
+# # AMAZON SCRAPER
+# # ----------------------------------------
+# def scrape_amazon(driver, query):
+#     if not safe_wait(driver):
+#         return []
+
+#     driver.get("https://www.amazon.in/")
+#     time.sleep(3)
+
+#     # Search box
+#     try:
+#         search_box = driver.find_element(By.ID, "twotabsearchtextbox")
+#     except:
+#         return []
+
+#     search_box.send_keys(query)
+#     search_box.send_keys(Keys.RETURN)
+#     time.sleep(3)
+
+#     data = []
+#     products = driver.find_elements(By.CSS_SELECTOR, "div[data-component-type='s-search-result']")
+
+#     for product in products[:20]:
+#         try:
+#             title = product.find_element(By.TAG_NAME, "h2").text
+#             link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
+
+#             try:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.a-price-whole").text
+#             except:
+#                 price_text = "N/A"
+
+#             try:
+#                 image = product.find_element(By.CSS_SELECTOR, "img.s-image").get_attribute("src")
+#             except:
+#                 image = ""
+
+#             if link and not link.startswith("http"):
+#                 link = "https://www.amazon.in" + link
+
+#             price = clean_price(price_text)
+
+#             data.append({
+#                 "Website": "Amazon",
+#                 "Title": title,
+#                 "Price": price,
+#                 "Link": link,
+#                 "Image": image
+#             })
+#         except:
+#             continue
+
+#     return data
+
+
+# # ----------------------------------------
+# # MYNTRA SCRAPER
+# # ----------------------------------------
+# def scrape_myntra(driver, query):
+#     if not safe_wait(driver):
+#         return []
+
+#     driver.get("https://www.myntra.com/")
+#     time.sleep(3)
+
+#     try:
+#         search_box = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
+#     except:
+#         return []
+
+#     search_box.send_keys(query)
+#     search_box.send_keys(Keys.RETURN)
+#     time.sleep(5)
+
+#     try:
+#         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#     except:
+#         pass
+
+#     time.sleep(3)
+
+#     data = []
+#     products = driver.find_elements(By.CSS_SELECTOR, "li.product-base")
+
+#     for product in products[:20]:
+#         try:
+#             brand = product.find_element(By.CSS_SELECTOR, "h3.product-brand").text
+#             name = product.find_element(By.CSS_SELECTOR, "h4.product-product").text
+
+#             try:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.product-discountedPrice").text
+#             except:
+#                 price_text = product.find_element(By.CSS_SELECTOR, "span.product-price").text
+
+#             link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
+
+#             try:
+#                 image = product.find_element(By.CSS_SELECTOR, "img.img-responsive").get_attribute("src")
+#             except:
+#                 image = ""
+
+#             price = clean_price(price_text)
+
+#             data.append({
+#                 "Website": "Myntra",
+#                 "Title": f"{brand} {name}",
+#                 "Price": price,
+#                 "Link": link,
+#                 "Image": image
+#             })
+#         except:
+#             continue
+
+#     return data
+
+
+# # ----------------------------------------
+# # MAIN SCRAPER FUNCTION
+# # ----------------------------------------
+# def scrape_products(product_name):
+#     driver = create_driver()
+
+#     print("⏳ Scraping started with Firefox...")
+
+#     try:
+#         amazon_data = scrape_amazon(driver, product_name)
+#         print(f"✅ Amazon scraped: {len(amazon_data)} items")
+
+#         myntra_data = scrape_myntra(driver, product_name)
+#         print(f"✅ Myntra scraped: {len(myntra_data)} items")
+
+#     except Exception as e:
+#         print("❌ Error:", e)
+#         driver.quit()
+#         return []
+
+#     finally:
+#         try:
+#             driver.quit()
+#         except:
+#             pass
+
+#     all_data = amazon_data + myntra_data
+
+#     df = pd.DataFrame(all_data)
+#     df.to_csv("product_with_prices.csv", index=False, encoding="utf-8-sig")
+
+#     print("💾 File saved: product_with_prices.csv")
+#     print("🎉 Scraping Done!")
+
+#     return all_data
+
+
+# if __name__ == "__main__":
+#     p = input("Enter product: ")
+#     scrape_products(p)
+
+
+#use first before using above corrected code just to check if this ome is working
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 import pandas as pd
 import re
 
 
-# 🔹 Clean prices
 def clean_price(price_text):
     price = re.sub(r'[^\d]', '', price_text)
     return int(price) if price.isdigit() else None
 
 
-# 🔹 Basic wait validation
-def safe_wait(driver):
-    try:
-        driver.find_element(By.TAG_NAME, "body")
-        return True
-    except:
-        return False
+def get_driver():
+    options = FirefoxOptions()
+    options.add_argument("--headless")
+    options.add_argument("--width=1920")
+    options.add_argument("--height=1080")
+    options.set_preference("general.useragent.override",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:118.0) Gecko/20100101 Firefox/118.0"
+    )
+
+    service = FirefoxService("/usr/local/bin/geckodriver")
+    return webdriver.Firefox(service=service, options=options)
 
 
-# ----------------------------------------
-# ✅ AMAZON SCRAPER (works in headless)
-# ----------------------------------------
 def scrape_amazon(driver, query):
-    if not safe_wait(driver):
-        return []
-
     driver.get("https://www.amazon.in/")
     time.sleep(3)
 
-    try:
-        search_box = driver.find_element(By.ID, "twotabsearchtextbox")
-    except:
-        return []
-
-    search_box.send_keys(query)
-    search_box.send_keys(Keys.RETURN)
+    search = driver.find_element(By.ID, "twotabsearchtextbox")
+    search.send_keys(query)
+    search.send_keys(Keys.RETURN)
     time.sleep(3)
 
     data = []
+
     products = driver.find_elements(By.CSS_SELECTOR, "div[data-component-type='s-search-result']")
-
-    for product in products[:20]:
+    for item in products[:20]:
         try:
-            title = product.find_element(By.TAG_NAME, "h2").text
-            link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
+            title = item.find_element(By.TAG_NAME, "h2").text
+            link = item.find_element(By.TAG_NAME, "a").get_attribute("href")
+            image = item.find_element(By.CSS_SELECTOR, "img").get_attribute("src")
 
             try:
-                price_text = product.find_element(By.CSS_SELECTOR, "span.a-price-whole").text
+                price_text = item.find_element(By.CSS_SELECTOR, "span.a-price-whole").text
             except:
-                price_text = "N/A"
-
-            # image
-            try:
-                image = product.find_element(By.CSS_SELECTOR, "img.s-image").get_attribute("src")
-            except:
-                image = ""
-
-            if link and not link.startswith("http"):
-                link = "https://www.amazon.in" + link
+                price_text = None
 
             price = clean_price(price_text)
 
@@ -869,59 +1290,39 @@ def scrape_amazon(driver, query):
                 "Link": link,
                 "Image": image
             })
+
         except:
             continue
 
     return data
 
 
-# ----------------------------------------
-# ✅ MYNTRA SCRAPER (FULL HEADLESS FIX)
-# ----------------------------------------
 def scrape_myntra(driver, query):
-    if not safe_wait(driver):
-        return []
-
     driver.get("https://www.myntra.com/")
     time.sleep(3)
 
-    try:
-        search_box = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
-    except:
-        return []
-
-    search_box.send_keys(query)
-    search_box.send_keys(Keys.RETURN)
+    search = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
+    search.send_keys(query)
+    search.send_keys(Keys.RETURN)
     time.sleep(5)
 
-    # 🔹 SCROLL so Myntra loads all products
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(3)
 
     data = []
     products = driver.find_elements(By.CSS_SELECTOR, "li.product-base")
 
-    for product in products[:20]:
+    for item in products[:20]:
         try:
-            brand = product.find_element(By.CSS_SELECTOR, "h3.product-brand").text
-            name = product.find_element(By.CSS_SELECTOR, "h4.product-product").text
+            brand = item.find_element(By.CSS_SELECTOR, "h3.product-brand").text
+            name = item.find_element(By.CSS_SELECTOR, "h4.product-product").text
+            image = item.find_element(By.CSS_SELECTOR, "img").get_attribute("src")
+            link = item.find_element(By.TAG_NAME, "a").get_attribute("href")
 
-            # price
             try:
-                price_text = product.find_element(By.CSS_SELECTOR, "span.product-discountedPrice").text
+                price_text = item.find_element(By.CSS_SELECTOR, "span.product-discountedPrice").text
             except:
-                price_text = product.find_element(By.CSS_SELECTOR, "span.product-price").text
-
-            # link
-            link = product.find_element(By.TAG_NAME, "a").get_attribute("href")
-            if link and not link.startswith("http"):
-                link = "https://www.myntra.com" + link
-
-            # image
-            try:
-                image = product.find_element(By.CSS_SELECTOR, "img.img-responsive").get_attribute("src")
-            except:
-                image = ""
+                price_text = item.find_element(By.CSS_SELECTOR, "span.product-price").text
 
             price = clean_price(price_text)
 
@@ -932,64 +1333,29 @@ def scrape_myntra(driver, query):
                 "Link": link,
                 "Image": image
             })
+
         except:
             continue
 
     return data
 
 
-# ----------------------------------------
-# ⭐ MAIN SCRAPER (HEADLESS ENABLED)
-# ----------------------------------------
-def scrape_products(product_name):
+def scrape_products(product):
+    driver = get_driver()
+    print("🔥 Firefox scraper started")
 
-    # FULL HEADLESS CONFIG FOR DEPLOYMENT
-    options = Options()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    options.add_argument("--window-size=1920,1080")
-    options.add_argument(
-        "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.70 Safari/537.36"
-    )
+    amazon = scrape_amazon(driver, product)
+    myntra = scrape_myntra(driver, product)
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.quit()
 
-    print("⏳ Scraping started...")
-
-    try:
-        amazon_data = scrape_amazon(driver, product_name)
-        print(f"✅ Amazon scraped: {len(amazon_data)}")
-
-        myntra_data = scrape_myntra(driver, product_name)
-        print(f"✅ Myntra scraped: {len(myntra_data)}")
-
-    except Exception as e:
-        print("❌ Error during scraping:", e)
-        driver.quit()
-        return []
-
-    finally:
-        try:
-            driver.quit()
-        except:
-            pass
-
-    all_data = amazon_data + myntra_data
-
+    all_data = amazon + myntra
     df = pd.DataFrame(all_data)
-    df.to_csv("product_with_prices.csv", index=False, encoding="utf-8-sig")
+    df.to_csv("product_with_prices.csv", index=False)
 
-    print("✅ Done scraping all sites")
-    print(f"💾 Saved {len(all_data)} products")
-
+    print("✨ Scraping complete:", len(df))
     return all_data
 
 
-# Run manually
-if __name__ == "__main__":
-    product = input("Enter product to search: ")
-    scrape_products(product)
+
+

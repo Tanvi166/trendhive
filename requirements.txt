@@ -1,3 +1,15 @@
+# Flask
+# mysql-connector-python
+# pandas
+# plotly
+# webdriver-manager
+# selenium
+# gunicorn
+# beautifulsoup4
+# requests
+
+
+
 Flask
 mysql-connector-python
 pandas
@@ -7,3 +19,7 @@ selenium
 gunicorn
 beautifulsoup4
 requests
+python-dotenv
+
+# Firefox + Geckodriver dependencies
+pytest
