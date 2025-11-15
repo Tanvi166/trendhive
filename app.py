@@ -590,7 +590,7 @@ app.secret_key = "trendhive_secret"
 # )
 print("DB_HOST =", os.getenv("DB_HOST"))
 print("DB_USER =", os.getenv("DB_USER"))
-print("DB_PASS =", os.getenv("DB_PASS"))
+print("DB_PASSWORD =", os.getenv("DB_PASSWORD"))
 print("DB_NAME =", os.getenv("DB_NAME"))
 print("DB_PORT =", os.getenv("DB_PORT"))
 
@@ -598,7 +598,7 @@ print("DB_PORT =", os.getenv("DB_PORT"))
 db = mysql.connector.connect(
     host=os.getenv("DB_HOST"),
     user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASS"),
+    password=os.getenv("DB_PASSWORD"),
     database=os.getenv("DB_NAME"),
     port=int(os.getenv("DB_PORT")),
     use_pure=True
