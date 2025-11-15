@@ -1,10 +1,9 @@
-requests
-beautifulsoup4
-lxml
-gunicorn
-flask
+Flask
 mysql-connector-python
 pandas
 plotly
-python-dotenv
-
+webdriver-manager
+selenium
+gunicorn
+beautifulsoup4
+requests
