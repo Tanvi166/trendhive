@@ -573,54 +573,39 @@
 
 
 
-
-
-
-
-
-
-
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
-import os
-from requests.exceptions import RequestException
 
 
-# Clean price text
+# -------------------------------
+# CLEAN PRICE
+# -------------------------------
 def clean_price(text):
     price = re.sub(r"[^\d]", "", text)
     return int(price) if price else None
 
 
-# REAL browser headers (fixes Amazon + Myntra block)
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/127.0.0.1 Safari/537.36"
-    ),
-    "Accept-Language": "en-US,en;q=0.9",
-}
-
-
-# ------------------ AMAZON ------------------
+# -------------------------------
+# AMAZON SCRAPER
+# -------------------------------
 def scrape_amazon(query):
-    print("Scraping AMAZON...")
     url = f"https://www.amazon.in/s?k={query.replace(' ', '+')}"
+    headers = {
+        "User-Agent": "Mozilla/5.0"
+    }
 
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=10)
-    except RequestException:
-        return []
-
+    response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "lxml")
+
     products = soup.select("div[data-component-type='s-search-result']")
 
     results = []
     for p in products[:10]:
         try:
             title = p.h2.text.strip()
+
             link = "https://www.amazon.in" + p.h2.a["href"]
 
             price_tag = p.select_one("span.a-price-whole")
@@ -639,21 +624,19 @@ def scrape_amazon(query):
         except:
             continue
 
-    print("Amazon products:", len(results))
     return results
 
 
-# ------------------ MYNTRA ------------------
+# -------------------------------
+# MYNTRA SCRAPER
+# -------------------------------
 def scrape_myntra(query):
-    print("Scraping MYNTRA...")
     url = f"https://www.myntra.com/{query.replace(' ', '-')}"
+    headers = {"User-Agent": "Mozilla/5.0"}
 
-    try:
-        response = requests.get(url, headers=HEADERS, timeout=10)
-    except RequestException:
-        return []
-
+    response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, "lxml")
+
     products = soup.select("li.product-base")
 
     results = []
@@ -663,10 +646,7 @@ def scrape_myntra(query):
             name = p.select_one("h4.product-product").text.strip()
             title = f"{brand} {name}"
 
-            price_tag = (
-                p.select_one("span.product-discountedPrice")
-                or p.select_one("span.product-price")
-            )
+            price_tag = p.select_one("span.product-discountedPrice") or p.select_one("span.product-price")
             price = clean_price(price_tag.text) if price_tag else None
 
             link = "https://www.myntra.com" + p.a["href"]
@@ -684,34 +664,28 @@ def scrape_myntra(query):
         except:
             continue
 
-    print("Myntra products:", len(results))
     return results
 
 
-# ------------------ MAIN SCRAPER ------------------
+# -------------------------------
+# MAIN SCRAPER (FAST)
+# -------------------------------
 def scrape_products(product):
-    print("🔍 Scraping started...")
+    print("🔍 FAST scraping started...")
 
     amazon = scrape_amazon(product)
     myntra = scrape_myntra(product)
 
     all_data = amazon + myntra
-    print("Total scraped:", len(all_data))
-
-    # ⚠ Prevent empty CSV (your main issue)
-    if len(all_data) == 0:
-        print("❌ No data scraped! CSV NOT created.")
-        if os.path.exists("product_with_prices.csv"):
-            os.remove("product_with_prices.csv")
-        return []
 
     df = pd.DataFrame(all_data)
     df.to_csv("product_with_prices.csv", index=False)
 
-    print("✅ CSV saved successfully!")
+    print(f"✅ Scraping completed! Products: {len(all_data)}")
     return all_data
 
 
+# RUN MANUALLY
 if __name__ == "__main__":
     product = input("Search: ")
     scrape_products(product)
