@@ -35,7 +35,7 @@ Price Distribution (Histogram)
 
 Average Price by Website
 
-✨ Features
+✨ Features:
 
 🔍 Live product scraping using Selenium
 
