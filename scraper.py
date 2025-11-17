@@ -1237,9 +1237,6 @@
 
 
 
-
-
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -1274,7 +1271,7 @@ def scrape_amazon(driver, query):
         return []
 
     driver.get("https://www.amazon.in/")
-    time.sleep(3)
+    time.sleep(2)
 
     try:
         search_box = driver.find_element(By.ID, "twotabsearchtextbox")
@@ -1283,7 +1280,7 @@ def scrape_amazon(driver, query):
 
     search_box.send_keys(query)
     search_box.send_keys(Keys.RETURN)
-    time.sleep(3)
+    time.sleep(2)
 
     data = []
     products = driver.find_elements(By.CSS_SELECTOR, "div[data-component-type='s-search-result']")
@@ -1330,7 +1327,7 @@ def scrape_myntra(driver, query):
         return []
 
     driver.get("https://www.myntra.com/")
-    time.sleep(3)
+    time.sleep(2)
 
     try:
         search_box = driver.find_element(By.CSS_SELECTOR, 'input[placeholder="Search for products, brands and more"]')
@@ -1339,7 +1336,6 @@ def scrape_myntra(driver, query):
 
     search_box.send_keys(query)
     search_box.send_keys(Keys.RETURN)
-    time.sleep(5)
 
     # 🔹 SCROLL so Myntra loads all products
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -1437,7 +1433,7 @@ def scrape_products(product_name):
 
 
 # Run manually
-if _name_ == "_main_":
+if __name__ == "__main__":
     product = input("Enter product to search: ")
     scrape_products(product)
 
@@ -1445,5 +1441,3 @@ if _name_ == "_main_":
 
 
 #redo if end above is working
-
-
