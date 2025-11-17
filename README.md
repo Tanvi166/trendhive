@@ -1,176 +1,200 @@
-📈 TrendHive – Real-Time Price Trend Analysis Platform
+# 🐝 TrendHive – Smart Price Comparison & Trend Analysis Platform
 
-TrendHive is a real-time price comparison and analytics platform that scrapes product prices from e-commerce sites, stores them in a structured format, and visualizes insights through interactive charts and organized dashboards.
+TrendHive is a real-time product price comparison and analysis platform that helps users discover trending items, compare prices across e-commerce websites, and analyze price insights visually using interactive graphs.  
+It is built using **Flask, Selenium, Pandas, MySQL, and Matplotlib** to provide clean insights and smooth user experience.
 
-It helps users compare prices, discover trends, and analyze product pricing in a clean and intuitive interface.
+---
 
-<p align="center"> <img src="https://img.shields.io/badge/Backend-Flask-blue" /> <img src="https://img.shields.io/badge/Web%20Scraping-Selenium-orange" /> <img src="https://img.shields.io/badge/Database-MySQL-success" /> <img src="https://img.shields.io/badge/Visualization-Matplotlib-lightgrey" /> <img src="https://img.shields.io/badge/Language-Python-yellow" /> </p>
-🖼️ Platform Screenshots
+## 🖼️ Platform Screenshots
+---
 
-Upload your images inside a /screenshots folder
-And GitHub will automatically load them.
+### 🔐 Login Page  
+![Login](static/images/login.png)
 
-🔐 User Authentication
+### 📝 Sign Up Page  
+![Signup](static/images/signup.png)
 
-Sign Up Page
+### 🏠 Home Page  
+![Home](static/images/home.png)
 
-Login Page
+### 🔍 Product Search  
+![Search](static/images/search.png)
 
-🏠 Home Page
+### 📄 Search Results  
+![Search Results](static/images/search_results.png)
 
-🔍 Product Search & Live Scraping
+### 📊 Dashboard Overview  
+![Dashboard](static/images/dashboard.png)
 
-Search Input Page
+### 📈 Average Price by Website  
+![Graph 1](static/images/graph1_avg_price.png)
 
-Scraping in Progress
+### 📉 Price Distribution (Histogram)  
+![Graph 2](static/images/graph2_distribution.png)
 
-📄 Search Results
+### 🍩 Website Product Share  
+![Graph 3](static/images/graph3_share.png)
 
-📊 Dashboard Overview
+### 🛍️ Cheapest & Most Expensive Products  
+![Top Products](static/images/cheapest_expensive.png)
 
-📈 Analytics & Visualizations
-Website Product Share
+---
 
-Price Distribution (Histogram)
+## ✨ Features
+---
 
-Average Price by Website
+- 🔍 Real-time product scraping using Selenium  
+- 🛒 Price comparison from Amazon & Myntra  
+- 📦 Organized results table with product images & links  
+- 📊 Interactive visual dashboard (bar, pie, histogram)  
+- 💾 Data stored & processed using Pandas + CSV  
+- 🔐 User authentication (Login/Signup)  
+- ⚡ Fast Flask API backend  
 
-✨ Features:
+---
 
-🔍 Live product scraping using Selenium
+## 🛠️ Tech Stack
+---
 
-🛒 Compare prices across Amazon & Myntra
+### **Frontend**
+- HTML5  
+- CSS3  
+- Bootstrap  
+- JavaScript  
 
-📊 Interactive dashboard with charts
+### **Backend**
+- Python Flask  
+- Selenium Web Scraping  
+- Pandas for Data Processing  
+- Matplotlib for Visual Graphs  
+- MySQL Database  
+- CORS Enabled API  
 
-📈 Matplotlib-powered visual reports
+### **Data Processing**
+- Pandas  
+- NumPy  
+- Matplotlib  
 
-💾 MySQL database integration
+---
 
-📂 CSV download support
+## 📂 Project Structure
+---
 
-🔐 User Authentication System
+TrendHive/
+│
+├── static/ # Static frontend files
+│ ├── images/ # Screenshots used in README
+│ └── styles.css # CSS styling
+│
+├── templates/ # Frontend HTML templates
+│ ├── home.html
+│ ├── login.html
+│ ├── signup.html
+│ ├── dashboard.html
+│ └── results.html
+│
+├── scraper.py # Selenium scraper script
+├── app.py # Flask backend server
+├── product_with_prices.csv # Generated data file
+├── requirements.txt # Dependencies
+├── .env # Environment variables
+└── README.md # Project documentation
 
-🎨 Clean, modern & responsive UI
+yaml
+Copy code
 
-🧰 Tech Stack
-Frontend
+---
 
-HTML
+## 🚀 Installation & Setup
+---
 
-CSS
-
-Bootstrap
-
-Backend
-
-Python
-
-Flask
-
-Data Processing
-
-Pandas
-
-CSV
-
-Matplotlib
-
-Scraping
-
-Selenium (Chrome WebDriver)
-
-Database
-
-MySQL
-
-🗂️ Project Structure
-PRICE_TREND_PROJECT/
-│── app.py                 # Main Flask application
-│── scraper.py             # Selenium scraper for Amazon & Myntra
-│── product_with_prices.csv
-│── .env                   # Environment variables
-│── .gitignore
-│── static/                # CSS, JS, images
-│── templates/             # HTML files
-│── venv/                  # Virtual environment
-│── __pycache__/
-└── screenshots/           # Add all screenshots here
-
-⚙️ Installation & Setup
-1️⃣ Clone the Repository
-git clone <your-github-repo-link>
-cd PRICE_TREND_PROJECT
-
-2️⃣ Install Dependencies
+### **1️⃣ Clone the Repository**
+```bash
+git clone https://github.com/Tanvi166/trendhive.git
+cd trendhive
+2️⃣ Install Python Dependencies
+bash
+Copy code
 pip install -r requirements.txt
-
 3️⃣ Configure Environment Variables
-
 Create a .env file:
 
+ini
+Copy code
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=your_password
+DB_PASSWORD=your_mysql_password
 DB_NAME=trendhive
-
-4️⃣ Start Flask Server
+4️⃣ Start the Flask Server
+bash
+Copy code
 python app.py
+Backend will run on:
+👉 http://localhost:5000
 
-5️⃣ Open in Browser
-http://127.0.0.1:5000
+🎯 Usage Guide
+🔐 Login or sign up
 
-🔍 How the Scraper Works
+🔍 Enter a product name to search
 
-User enters product name
+🤖 System scrapes live data
 
-Selenium opens Amazon & Myntra
+📄 View product results table
 
-Extracts:
+📊 Open dashboard to analyze graphs:
 
-Title
+Average price comparison
 
-Price
+Price distribution histogram
 
-Image
+Website product share
 
-Source Website
+Cheapest & most expensive items
 
-Product Link
+📥 Export CSV if needed
 
-Saves results to MySQL
+🔧 Troubleshooting
+❗ Module Not Found
+bash
+Copy code
+pip install -r requirements.txt --upgrade
+❗ MySQL Connection Error
+Check .env credentials.
 
-Converts data to CSV
+❗ Port Already in Use
+bash
+Copy code
+netstat -ano | findstr :5000
+taskkill /PID <PID> /F
+🗂️ Data Sources
+Live scraped product data
 
-Matplotlib charts generated
+Amazon
 
-Dashboard displays analytics
+Myntra
 
-🚀 Future Enhancements
+CSV storage for analysis
 
-Flipkart & Ajio integration
-
-PowerBI dashboard support
-
-Price drop alert system
-
-Background scheduler for daily scraping
-
-Mobile-friendly PWA
-
-User wishlist system
-
-👥 Team Members
-
-Developed by:
-
+👥 Team
 Tanvi
 
 Sanchi
 
 Yashsavi
 
-🏁 Conclusion
+📜 License
+MIT License
 
-TrendHive provides a simple yet powerful way to analyze product pricing trends in real time.
-With live scraping, structured storage, and clear visual insights, the platform helps users make informed decisions while shopping online.
+📧 Contact
+For queries, open an issue on GitHub.
+TrendHive – Shop Smart. Compare Better. Save More. 🐝
+
+yaml
+Copy code
+
+---
+
+# ✅ Done!  
+Just paste the entire Markdown block into your **README.md** and GitHub will render it perfectly — including the **exact project structure lines** like your friend’s.
+
+If you want badges, colors, or a banner at the top, I can add that too
