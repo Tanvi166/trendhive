@@ -204,13 +204,8 @@ Pull requests are welcome.
 
 ---
 
-## 📜 License
-
-MIT License
-
----
 
 ## 👩‍💻 Team
 
-Developed by **Tanu (B.Tech CSE - AIFT)**  
+Developed by **Tanvi, Sanchi, Yashsavi**  
 TrendHive · 2025
